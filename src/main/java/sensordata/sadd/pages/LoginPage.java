@@ -1,5 +1,6 @@
+package main.java.sensordata.sadd.pages;
+
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,14 +23,14 @@ public class LoginPage implements ActionListener {
 
     JLabel messageLabel = new JLabel();
 
-    ImageIcon image = new ImageIcon(getClass().getResource("image.png"));
+    ImageIcon image = new ImageIcon(getClass().getClassLoader().getResource("images/background.png").getFile());
 
     JLabel image_label = new JLabel(image);
 
     HashMap<String, String> loginInfo = new HashMap<String, String>();
 
 
-    LoginPage(HashMap<String, String> loginInf){
+    public LoginPage(HashMap<String, String> loginInf){
 
         loginInfo = loginInf;
 
