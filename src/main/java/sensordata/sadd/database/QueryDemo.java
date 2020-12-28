@@ -1,5 +1,6 @@
 package main.java.sensordata.sadd.database;
 
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
 public class QueryDemo {
@@ -13,8 +14,8 @@ public class QueryDemo {
     public static Connection getConnection() throws Exception {
         try {
             String url = "jdbc:mysql://localhost:3306/sadd";
-            String username = "login";
-            String password = "pass";
+            String username = "otacon";
+            String password = "sherman";
 
             Connection conn = DriverManager.getConnection(url, username, password);
             System.out.println("Connected");
@@ -22,7 +23,6 @@ public class QueryDemo {
         } catch (Exception e) {
             System.out.println(e);
         }
-
 
         return null;
     }
@@ -83,9 +83,7 @@ public class QueryDemo {
         return result;
     }
 
-    public String query(String query) throws Exception {
-        String result = "";
-
+    public DefaultTableModel query(String query) throws Exception {
         Connection con = getConnection();
         PreparedStatement statement = null;
 
@@ -107,18 +105,24 @@ public class QueryDemo {
 
         int columns = rsmd.getColumnCount();
 
+        String columnNames[] = new String[columns];
+        String rowValues[] = new String[columns];
+
+        DefaultTableModel model = new DefaultTableModel();
+
         if (columns > 0) {
             for (int i = 1; i <= columns; i++ ) {
-                result += rsmd.getColumnName(i) + "\t";
+                model.addColumn(rsmd.getColumnName(i));
             }
-            result += "\n";
+
             while (resultSet.next()) {
+
                 for (int i = 1; i <= columns; i++ ) {
-                    result += resultSet.getString(i) + "\t";
+                     rowValues[i-1] = resultSet.getString(i);
                 }
-                result += "\n";
+                model.addRow(rowValues);
             }
         }
-        return result;
+        return model;
     }
 }
