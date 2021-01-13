@@ -14,7 +14,8 @@ public class Main {
         JPanel container = new JPanel(layout);
 
         HomePage homePage = new HomePage(layout, container);
-        LoginPage loginPage = new LoginPage(new HashMap<String, String>(), layout, container);
+        LoginPage loginPage = new LoginPage(userInfo.getLoginInfo());
+        loginPage.setVisible(true);
 
         container.add(homePage.homePage);
         container.add(loginPage.frame);
@@ -34,4 +35,4 @@ public class Main {
         frame.setVisible(true);
     }
 }
-
+  
