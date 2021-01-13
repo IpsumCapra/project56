@@ -14,6 +14,7 @@ public class Main {
         JPanel container = new JPanel(layout);
 
         HomePage homePage = new HomePage(layout, container);
+        UserInfo userInfo = new UserInfo();
         LoginPage loginPage = new LoginPage(userInfo.getLoginInfo());
         loginPage.setVisible(true);
 
