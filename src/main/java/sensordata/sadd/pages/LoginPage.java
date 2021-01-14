@@ -34,6 +34,8 @@ public class LoginPage extends Page implements ActionListener {
     public LoginPage(HashMap<String, String> loginInf, CardLayout cards, Container parent){
         super(cards, parent);
 
+        frame.setName("jeff");
+
         loginInfo = loginInf;
 
         userIDLabel.setBounds(500, 320, 110, 25);

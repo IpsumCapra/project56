@@ -1,15 +1,20 @@
 package main.java.sensordata.sadd.database;
 
+import main.java.sensordata.sadd.pages.Overview;
+import main.java.sensordata.sadd.pages.Shortcut;
+
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.util.LinkedList;
 
-public class QueryDemo {
+public class QuerySystem {
     String properties[] = {"temperatuur", "druk", "tag", "unit"};
     String transProperty[] = {"temp", "pressure", "tag", "unit"};
 
     String locationIdentifiers[] = {"uit", "van"};
 
-    String conditionIdentifiers[] = {"of", "en"};
+    String specialIdentifiers[] = {"minimum", "maximum", "gemiddelde"};
+    String transIdentifiers[] = {"min", "max", "avg"};
 
     public static Connection getConnection() throws Exception {
         try {
@@ -51,7 +56,7 @@ public class QueryDemo {
             int propID = isProperty(query[i]);
             if (propID != -1) {
                 if (i > 0) {
-                    if (!isLocationIdentifier(query[i-1])) {
+                    if (!isLocationIdentifier(query[i - 1])) {
                         if (result.equals("*")) result = "";
                         result += transProperty[propID] + ", ";
                     }
@@ -105,24 +110,92 @@ public class QueryDemo {
 
         int columns = rsmd.getColumnCount();
 
-        String columnNames[] = new String[columns];
         String rowValues[] = new String[columns];
 
         DefaultTableModel model = new DefaultTableModel();
 
         if (columns > 0) {
-            for (int i = 1; i <= columns; i++ ) {
+            for (int i = 1; i <= columns; i++) {
                 model.addColumn(rsmd.getColumnName(i));
             }
 
             while (resultSet.next()) {
 
-                for (int i = 1; i <= columns; i++ ) {
-                     rowValues[i-1] = resultSet.getString(i);
+                for (int i = 1; i <= columns; i++) {
+                    rowValues[i - 1] = resultSet.getString(i);
                 }
                 model.addRow(rowValues);
             }
         }
         return model;
     }
+
+    public Overview[] getOverviews(String email) throws Exception {
+        PreparedStatement statement = getConnection().prepareStatement("SELECT overview_id, name, query, refresh_rate  FROM overviews WHERE user_mail = \"" + email + "\"");
+        ResultSet resultSet = statement.executeQuery();
+
+        LinkedList<Overview> overviews = new LinkedList<>();
+
+        while (resultSet.next()) {
+            overviews.add(new Overview(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getInt(4), this));
+        }
+        return overviews.toArray(new Overview[0]);
+    }
+
+    public Shortcut[] getShortcuts(String email) throws Exception {
+        PreparedStatement statement = getConnection().prepareStatement("SELECT name, shortcut_id, query  FROM shortcuts WHERE user_mail = \"" + email + "\"");
+        ResultSet resultSet = statement.executeQuery();
+
+        LinkedList<Shortcut> shortcuts = new LinkedList<>();
+
+        while (resultSet.next()) {
+            shortcuts.add(new Shortcut(resultSet.getString(1), resultSet.getInt(2), resultSet.getString(3)));
+        }
+        return shortcuts.toArray(new Shortcut[0]);
+    }
+
+    public boolean addOverview(String email, String query, String name, int refreshRate) {
+        try {
+            PreparedStatement update = getConnection().prepareStatement("INSERT INTO overviews (user_mail, query, name, refresh_rate) VALUES (\"" + email + "\", \"" + query + "\", \"" + name + "\", " + refreshRate + ")");
+            System.out.println(update.executeUpdate());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteOverview(String email, int id) {
+        try {
+            PreparedStatement delete = getConnection().prepareStatement("DELETE FROM overviews WHERE overview_id = " + id);
+            delete.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean addShortcut(String email, String query, String name) {
+        try {
+            PreparedStatement update = getConnection().prepareStatement("INSERT INTO shortcuts (user_mail, query, name) VALUES (\"" + email + "\", \"" + query + "\", \"" + name + "\")");
+            System.out.println(update.executeUpdate());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteShortcut(String email, int id) {
+        try {
+            PreparedStatement delete = getConnection().prepareStatement("DELETE FROM shortcuts WHERE shortcut_id = " + id);
+            delete.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
