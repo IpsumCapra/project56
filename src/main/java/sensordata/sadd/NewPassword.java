@@ -43,7 +43,7 @@ public class NewPassword extends Page implements ActionListener {
                         try {
                             byte[] salt = post_pass.generateSalt();
                             String char_salt = Base64.getEncoder().encodeToString(salt);
-                            final String command = "UPDATE users.security SET password = \"" + post_pass.getSecurePassword(input_password, salt) + "\" , Salt = " + "\"" + char_salt + "\"" + " WHERE email = \"" + email + "\";";
+                            final String command = "UPDATE sadd.users SET password = \"" + post_pass.getSecurePassword(input_password, salt) + "\" , Salt = " + "\"" + char_salt + "\"" + " WHERE email = \"" + email + "\";";
                             System.out.print(char_salt);
                             post_pass.post(command);
 

@@ -97,7 +97,7 @@ public class RegisterPage extends Page implements ActionListener {
                         } else {
                             byte[] salt = new_account.generateSalt();
                             String char_salt = Base64.getEncoder().encodeToString(salt);
-                            final String command = "INSERT INTO users.security(username, password,email,insertion,lastname,salt) VALUES ('" + firstName + "', '" + new_account.getSecurePassword(password1, salt) + "','" + email + "','" + insertion + "','" + lastName + "','" + char_salt + "')";
+                            final String command = "INSERT INTO sadd.users(username, password,email,insertion,lastname,salt) VALUES ('" + firstName + "', '" + new_account.getSecurePassword(password1, salt) + "','" + email + "','" + insertion + "','" + lastName + "','" + char_salt + "')";
                             new_account.post(command);
                             // TODO
                             // naar home scherm

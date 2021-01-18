@@ -31,7 +31,7 @@ public class UserInfo {
     {
         try{
             String driver = "com.mysql.cj.jdbc.Driver";
-            String url = "jdbc:mysql://127.0.0.1:3306/users?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";// jouw eigen ding invullen
+            String url = "jdbc:mysql://localhost:3306/sadd";// jouw eigen ding invullen
             String username = "root"; //jouw eigen ding invullen
             String password = "root";//jouw eigen ding invullen
             Class.forName(driver);
@@ -48,7 +48,7 @@ public class UserInfo {
     public static String get(String input , String value) throws Exception{
         try{
             Connection con = getConnection();
-            PreparedStatement statement = con.prepareStatement("SELECT password FROM users.security WHERE "+input+" = \""+value+"\"");
+            PreparedStatement statement = con.prepareStatement("SELECT password FROM sadd.users WHERE "+input+" = \""+value+"\"");
 
             ResultSet result = statement.executeQuery();
 
@@ -81,7 +81,7 @@ public class UserInfo {
     public static String salting(String input , String value) throws Exception{
         try{
             Connection con = getConnection();
-            PreparedStatement statement = con.prepareStatement("SELECT salt FROM users.security WHERE "+input+" = \""+value+"\"");
+            PreparedStatement statement = con.prepareStatement("SELECT salt FROM sadd.users WHERE "+input+" = \""+value+"\"");
 
             ResultSet result = statement.executeQuery();
 
@@ -115,7 +115,7 @@ public class UserInfo {
     public static String get_count(String input,String value) throws Exception{
         try{
             Connection con = getConnection();
-            PreparedStatement statement = con.prepareStatement("SELECT COUNT(*) as count FROM users.security WHERE "+input+" = "+"\""+value+"\";");
+            PreparedStatement statement = con.prepareStatement("SELECT COUNT(*) as count FROM sadd.users WHERE "+input+" = "+"\""+value+"\";");
 
             ResultSet result = statement.executeQuery();
 
