@@ -2,22 +2,28 @@ package main.java.sensordata.sadd;
 
 
 import main.java.sensordata.sadd.pages.HomePage;
-import main.java.sensordata.sadd.pages.LoginPage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
         CardLayout layout = new CardLayout();
         JPanel container = new JPanel(layout);
 
-        HomePage homePage = new HomePage(layout, container);
-        LoginPage loginPage = new LoginPage(new HashMap<String, String>(), layout, container);
+        UserInfo userInfo = new UserInfo();
 
-        container.add(homePage.homePage);
-        container.add(loginPage.frame);
+        HomePage homePage = new HomePage(layout, container);
+        LoginPage loginPage = new LoginPage(userInfo.getLoginInfo(), layout, container);
+        ResetPage resetPage = new ResetPage(layout, container);
+        RegisterPage registerPage = new RegisterPage(layout, container);
+        NewPassword password = new NewPassword(resetPage.getTextField2(), layout, container);
+
+        container.add("login", loginPage.loginPanel);
+        container.add("register", registerPage.registerPanel);
+        container.add("reset", resetPage.resetPagePanel);
+        container.add("newPassword", password.newPasswordPanel);
+        container.add("home", homePage.homePage);
 
         JFrame frame = new JFrame("Home Page");
 

@@ -49,6 +49,7 @@ public class HomePage extends Page implements ActionListener {
     private static final String DELETE_SHORTCUT = "delete shortcut";
     private static final String TOGGLE_OVERVIEW_WIZARD = "toggle overview wizard";
     private static final String TOGGLE_SHORTCUT_WIZARD = "toggle shortcut wizard";
+    private static final String LOGOUT = "logout";
 
     private String email;
 
@@ -101,6 +102,9 @@ public class HomePage extends Page implements ActionListener {
 
         shortcutPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         overviewPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        logUitButton.setActionCommand(LOGOUT);
+        logUitButton.addActionListener(this);
 
         //TODO Replace with login.
         setEmail("0946142@hr.nl");
@@ -273,6 +277,8 @@ public class HomePage extends Page implements ActionListener {
                     addShortcutButton.setText("Voeg nieuwe snelkoppeling toe");
                 }
                 break;
+            case LOGOUT:
+                getCards().show(getParent(), "login");
         }
     }
 }
