@@ -16,8 +16,8 @@ public class Main {
         HomePage homePage = new HomePage(layout, container);
         LoginPage loginPage = new LoginPage(new HashMap<String, String>(), layout, container);
 
-        container.add(homePage.homePage);
-        container.add(loginPage.frame);
+        container.add("homepage", homePage.homePage);
+        container.add("loginpage", loginPage.frame);
 
         JFrame frame = new JFrame("Home Page");
 

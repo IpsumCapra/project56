@@ -14,7 +14,7 @@ public class QuerySystem {
     String locationIdentifiers[] = {"uit", "van"};
 
     String specialIdentifiers[] = {"minimum", "maximum", "gemiddelde"};
-    String transIdentifiers[] = {"min", "max", "avg"};
+    String transIdentifiers[] = {"MIN", "MAX", "AVG"};
 
     public static Connection getConnection() throws Exception {
         try {
@@ -50,6 +50,15 @@ public class QuerySystem {
         return false;
     }
 
+    private int isSpecialIdentifier(String test) {
+        for (int i = 0; i < specialIdentifiers.length; i++) {
+            if (test.equalsIgnoreCase(specialIdentifiers[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private String findProperties(String[] query) {
         String result = "*";
         for (int i = 0; i < query.length; i++) {
@@ -58,7 +67,12 @@ public class QuerySystem {
                 if (i > 0) {
                     if (!isLocationIdentifier(query[i - 1])) {
                         if (result.equals("*")) result = "";
-                        result += transProperty[propID] + ", ";
+                        int special = isSpecialIdentifier(query[i-1]);
+                        if (special == -1) {
+                            result += transProperty[propID] + ", ";
+                        } else {
+                            result += transIdentifiers[special] + "(" + transProperty[propID] + "), ";
+                        }
                     }
                 } else {
                     if (result.equals("*")) result = "";
@@ -99,6 +113,7 @@ public class QuerySystem {
 
         String properties = findProperties(querySplit);
         String location = findLocations(querySplit);
+
 
         String queryString = "SELECT " + properties + " FROM sensordata" + (!location.equals("") ? " WHERE " + location : "");
 
