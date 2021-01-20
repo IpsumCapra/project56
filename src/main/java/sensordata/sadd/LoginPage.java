@@ -81,6 +81,7 @@ public class LoginPage extends Page implements ActionListener {
                         getCards().show(getParent(), "home");
                         usernameField.setText("");
                         passwordField.setText("");
+                        messageLabel.setText("");
                     } else {
                         wrongPasswordOrUsername();
 

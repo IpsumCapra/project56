@@ -14,6 +14,7 @@ public class ResetPage extends Page implements ActionListener {
     private JButton terugButton;
     private JTextField textField2;
     private JButton verifieerButton;
+    private JLabel warning;
 
     private String number;
     private String email;
@@ -56,7 +57,15 @@ public class ResetPage extends Page implements ActionListener {
                     Main main =new Main();
                     main.updateNewPassword(email);
                     getCards().show(getParent(), "newPassword");
+                    number="";
+                    textField1.setText("");
+                    textField2.setText("");
+                    warning.setText("");
                 }
+                else {
+                    warning.setForeground(Color.red);
+                    warning.setText("De code is niet juist");
+                    }
                 break;
         }
     }

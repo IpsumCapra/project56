@@ -18,12 +18,8 @@ public class RegisterPage extends Page implements ActionListener {
     private JLabel firstNameLabel;
     private JLabel lastNameLabel;
     private JLabel emailLabel;
-    private JLabel passwordLabel;
-    private JLabel repeatPasswordLabel;
     private JLabel inserionLabel;
     private JLabel requiredFieldLabel;
-    private JPasswordField passwordField;
-    private JPasswordField repeatPasswordField;
     private JLabel goBackLabel;
     private JLabel messageLabel;
     private JButton backToLogin;
@@ -51,8 +47,6 @@ public class RegisterPage extends Page implements ActionListener {
                 insertionField.setText("");
                 lastNameField.setText("");
                 emailField.setText("");
-                passwordField.setText("");
-                repeatPasswordField.setText("");
                 getCards().show(getParent(), "login");
                 break;
 
@@ -61,25 +55,16 @@ public class RegisterPage extends Page implements ActionListener {
                 String insertion = insertionField.getText();
                 String lastName = lastNameField.getText();
                 String email = emailField.getText();
-                String password1 = String.valueOf(passwordField.getPassword());
-                String password2 = String.valueOf(repeatPasswordField.getPassword());
 
                 checkForEmptyFields(firstName, firstNameField);
                 checkForEmptyFields(lastName, lastNameField);
                 checkForEmptyFields(email, emailField);
-                checkForEmptyFields(password1, passwordField);
-                checkForEmptyFields(password2, repeatPasswordField);
 
-                if (firstName.equals("") || lastName.equals("") || email.equals("") || password1.equals("") || password2.equals("")) {
+                if (firstName.equals("") || lastName.equals("") || email.equals("") ) {
                     messageLabel.setForeground(Color.red);
                     messageLabel.setText("Niet alle verplichte velden zijn ingevuld");
 
-                } else if (!password1.equals(password2)) {
-                    messageLabel.setForeground(Color.red);
-                    passwordField.setText("");
-                    repeatPasswordField.setText("");
-                    messageLabel.setText("Wachtwoord komt niet overeen");
-                } else if (password1.length() >= 8) {
+                } else  {
                     UserInfo new_account = new UserInfo();
                     try {
                         String username_check = new_account.get_count("username", firstName);
@@ -95,19 +80,17 @@ public class RegisterPage extends Page implements ActionListener {
                             messageLabel.setForeground(Color.red);
                             messageLabel.setText("De Email is al in gebruik");
                         } else {
-                            byte[] salt = new_account.generateSalt();
-                            String char_salt = Base64.getEncoder().encodeToString(salt);
-                            final String command = "INSERT INTO sadd.users(username, password,email,insertion,lastname,salt) VALUES ('" + firstName + "', '" + new_account.getSecurePassword(password1, salt) + "','" + email + "','" + insertion + "','" + lastName + "','" + char_salt + "')";
+                            final String command = "INSERT INTO sadd.users(username,email,insertion,lastname) VALUES ('" + firstName + "', '" + email + "','" + insertion + "','" + lastName + "')";
                             new_account.post(command);
-                            // TODO
-                            // naar home scherm
+                            getCards().show(getParent(), "reset");
+                            firstNameField.setText("");
+                            insertionField.setText("");
+                            lastNameField.setText("");
+                            emailField.setText("");
                         }
                     } catch (Exception E) {
                         System.out.print(E);
                     }
-                } else {
-                    messageLabel.setForeground(Color.red);
-                    messageLabel.setText("Wachtwoord moet meer dan 8 letters/cijfers hebben");
                 }
                 break;
         }
