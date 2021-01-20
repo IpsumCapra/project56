@@ -16,8 +16,7 @@ public class ResetPage extends Page implements ActionListener {
     private JButton verifieerButton;
 
     private String number;
-
-    public String email;
+    private String email;
 
     private static final String LOGIN = "login";
     private static final String VERIFIEER = "verifieer";
@@ -54,6 +53,8 @@ public class ResetPage extends Page implements ActionListener {
                 break;
             case VERIFIEER:
                 if(number.equals(textField2.getText())) {
+                    Main main =new Main();
+                    main.updateNewPassword(email);
                     getCards().show(getParent(), "newPassword");
                 }
                 break;

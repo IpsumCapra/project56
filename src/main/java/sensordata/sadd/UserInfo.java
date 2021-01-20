@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserInfo {
+    private static String email;
     private static String password;
+    private static String username;
     private static String salt;
     private static String count_nr;
 
@@ -56,19 +58,52 @@ public class UserInfo {
             while(result.next()){
                 password= result.getString("password");
                 System.out.print(" ");
-                salt= result.getString("salt");
-                System.out.print(" ");
-
                 array.add(result.getString("password"));
             }
-
-
-
         }
-        catch(Exception e){
+        catch(Exception e){ }
 
-        }
         return password;
+    }
+
+    public static String getEmail(String input , String value) throws Exception{
+        try{
+            Connection con = getConnection();
+            PreparedStatement statement = con.prepareStatement("SELECT email FROM sadd.users WHERE "+input+" = \""+value+"\"");
+
+            ResultSet result = statement.executeQuery();
+
+            ArrayList<String> array = new ArrayList<String>();
+            while(result.next()){
+                email= result.getString("email");
+                System.out.print(" ");
+                array.add(result.getString("email"));
+            }
+        }
+        catch(Exception e){ }
+
+        return email;
+    }
+
+    public static String getUsername(String input , String value) throws Exception{
+        try{
+            Connection con = getConnection();
+            PreparedStatement statement = con.prepareStatement("SELECT username FROM sadd.users WHERE "+input+" = \""+value+"\"");
+
+            ResultSet result = statement.executeQuery();
+
+            ArrayList<String> array = new ArrayList<String>();
+            while(result.next()){
+                username= result.getString("username");
+                System.out.print(" ");
+
+
+                array.add(result.getString("username"));
+            }
+        }
+        catch(Exception e){ }
+
+        return username;
     }
 
     //return the password
@@ -93,9 +128,6 @@ public class UserInfo {
 
                 array.add(result.getString("salt"));
             }
-
-
-
         }
         catch(Exception e){
 
@@ -179,7 +211,6 @@ public class UserInfo {
         return salt;
     }
 
-
-
+    
 }
 

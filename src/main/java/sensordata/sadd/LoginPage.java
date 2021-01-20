@@ -59,17 +59,25 @@ public class LoginPage extends Page implements ActionListener {
                 String username_input = usernameField.getText();
                 String password = String.valueOf(passwordField.getPassword());
                 UserInfo email = new UserInfo();
-                UserInfo username = new UserInfo();
 
                 try {
-                    username.get("username", username_input);
+                    //If the user has inserted username, then get the email from this username
+                    if(email.get("email", username_input)==null)
+                    {
+                        username_input = email.getEmail("username", username_input);
+                        System.out.print(username_input);
+                    }
                     email.get("email", username_input);
-                    username.salting("username", username_input);
                     email.salting("email", username_input);
 
-                    byte[] salt_1 = Base64.getDecoder().decode(username.getSalt());
-                    byte[] salt_2 = Base64.getDecoder().decode(email.getSalt());
-                    if (username.getSecurePassword(password, salt_1).equals(username.getpassword()) || email.getSecurePassword(password, salt_2).equals(email.getpassword())) {
+
+                    byte[] salt = Base64.getDecoder().decode(email.getSalt());
+                    if (email.getSecurePassword(password, salt).equals(email.getpassword())) {
+
+                        Main main = new Main();
+                        String username= email.getUsername("email", username_input);
+                        System.out.print(username);
+                        main.updateHomePage(username_input,username);
                         getCards().show(getParent(), "home");
                         usernameField.setText("");
                         passwordField.setText("");
