@@ -6,9 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-public class LoginPage implements ActionListener {
+public class LoginPage extends Page implements ActionListener {
 
-    JFrame frame = new JFrame();
+
+    public JPanel frame = new JPanel();
 
     // create a login button
     JButton loginButton = new JButton("Login");
@@ -27,10 +28,13 @@ public class LoginPage implements ActionListener {
 
     JLabel image_label = new JLabel(image);
 
-    HashMap<String, String> loginInfo = new HashMap<String, String>();
+    HashMap<String, String> loginInfo;
 
 
-    public LoginPage(HashMap<String, String> loginInf){
+    public LoginPage(HashMap<String, String> loginInf, CardLayout cards, Container parent){
+        super(cards, parent);
+
+        frame.setName("jeff");
 
         loginInfo = loginInf;
 
@@ -68,12 +72,6 @@ public class LoginPage implements ActionListener {
         frame.add(userPasswordField);
         frame.add(loginButton);
         frame.add(image_label);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setLayout(null);
-        frame.setVisible(true);
-
     }
 
     @Override
