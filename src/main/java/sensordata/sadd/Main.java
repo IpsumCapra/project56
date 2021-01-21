@@ -2,22 +2,28 @@ package main.java.sensordata.sadd;
 
 
 import main.java.sensordata.sadd.pages.HomePage;
-import main.java.sensordata.sadd.pages.LoginPage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
+
 
 public class Main {
+
+    static CardLayout layout = new CardLayout();
+    static JPanel container = new JPanel(layout);
+
     public static void main(String[] args) {
-        CardLayout layout = new CardLayout();
-        JPanel container = new JPanel(layout);
+        UserInfo userInfo = new UserInfo();
 
-        HomePage homePage = new HomePage(layout, container);
-        LoginPage loginPage = new LoginPage(new HashMap<String, String>(), layout, container);
+        LoginPage loginPage = new LoginPage(userInfo.getLoginInfo(), layout, container);
+        ResetPage resetPage = new ResetPage(layout, container);
+        RegisterPage registerPage = new RegisterPage(layout, container);
 
-        container.add("homepage", homePage.homePage);
-        container.add("loginpage", loginPage.frame);
+
+        container.add("login", loginPage.loginPanel);
+        container.add("register", registerPage.registerPanel);
+        container.add("reset", resetPage.resetPagePanel);
+
 
         JFrame frame = new JFrame("Home Page");
 
@@ -32,6 +38,19 @@ public class Main {
         frame.setPreferredSize(new Dimension(800, 600));
         frame.pack();
         frame.setVisible(true);
+    }
+    public void updateNewPassword(String email)
+    {
+        NewPassword password = new NewPassword(email, layout, container);
+        container.add("newPassword", password.newPasswordPanel);
+
+    }
+
+    public void updateHomePage(String email,String username)
+    {
+        HomePage homePage = new HomePage(email,username, layout, container);
+        container.add("home", homePage.homePage);
+
     }
 }
 

@@ -12,7 +12,7 @@ public class HomePage extends Page implements ActionListener {
     public JPanel homePage;
     private JTextField searchField;
     private JButton searchButton;
-    private JLabel username;
+    private JLabel usernameLabel;
     private JButton logUitButton;
     private JPanel userIconPanel;
     private JPanel overview;
@@ -47,8 +47,10 @@ public class HomePage extends Page implements ActionListener {
     private static final String DELETE_SHORTCUT = "delete shortcut";
     private static final String TOGGLE_OVERVIEW_WIZARD = "toggle overview wizard";
     private static final String TOGGLE_SHORTCUT_WIZARD = "toggle shortcut wizard";
+    private static final String LOGOUT = "logout";
 
     private String email;
+    private String username;
 
     private boolean inOverviewWizard = false;
     private boolean inShortcutWizard = false;
@@ -58,7 +60,7 @@ public class HomePage extends Page implements ActionListener {
 
     private final QuerySystem querySystem = new QuerySystem();
 
-    public HomePage(CardLayout cards, Container parent) {
+    public HomePage(String email,String username,CardLayout cards, Container parent) {
         super(cards, parent);
 
         JMenuItem overviewDeleteItem = new JMenuItem("Verwijder overzicht");
@@ -100,9 +102,12 @@ public class HomePage extends Page implements ActionListener {
         shortcutPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         overviewPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        //TODO Replace with login.
-        setEmail("0946142@hr.nl");
+        logUitButton.setActionCommand(LOGOUT);
+        logUitButton.addActionListener(this);
 
+        //TODO Replace with login.
+        setEmailUsername(email,username);
+        usernameLabel.setText(username);
 
 
         buildShortcuts();
@@ -188,8 +193,10 @@ public class HomePage extends Page implements ActionListener {
         ((CardLayout) contentPanel.getLayout()).show(contentPanel, "results");
     }
 
-    public void setEmail(String email) {
+    public void setEmailUsername(String email,String username)
+    {
         this.email = email;
+        this.username= username;
     }
 
     @Override
@@ -272,6 +279,8 @@ public class HomePage extends Page implements ActionListener {
                     addShortcutButton.setText("Voeg nieuwe snelkoppeling toe");
                 }
                 break;
+            case LOGOUT:
+                getCards().show(getParent(), "login");
         }
     }
 }
