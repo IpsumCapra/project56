@@ -1,6 +1,7 @@
-package main.java.sensordata.sadd;
+package main.java.sensordata.sadd.pages;
 
-import main.java.sensordata.sadd.pages.Page;
+import main.java.sensordata.sadd.Main;
+import main.java.sensordata.sadd.database.UserInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,7 @@ public class LoginPage extends Page implements ActionListener {
 
     HashMap<String, String> loginInfo = new HashMap<String, String>();
 
-    LoginPage(HashMap loginInf, CardLayout cards, Container parent) {
+    public LoginPage(HashMap loginInf, CardLayout cards, Container parent) {
         super(cards, parent);
         loginInfo = loginInf;
 

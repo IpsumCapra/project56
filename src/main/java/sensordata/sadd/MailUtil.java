@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class JavaMailUtil {
+public class MailUtil {
 
 
     private static String verify_code;
@@ -60,7 +60,7 @@ public class JavaMailUtil {
             message.setContent(htmlCode, "text/html");
             return message;
         } catch (Exception ex) {
-            Logger.getLogger(JavaMailUtil.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MailUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

@@ -1,12 +1,11 @@
-package main.java.sensordata.sadd;
+package main.java.sensordata.sadd.pages;
 
-import main.java.sensordata.sadd.pages.Page;
+import main.java.sensordata.sadd.database.UserInfo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Base64;
 
 public class RegisterPage extends Page implements ActionListener {
     private JTextField firstNameField;
