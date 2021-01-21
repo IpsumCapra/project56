@@ -55,7 +55,7 @@
           </grid>
           <grid id="aa87d" binding="contentPanel" layout-manager="CardLayout" hgap="0" vgap="0" show="93149">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="50.0"/>
             </constraints>
             <properties/>
@@ -343,27 +343,9 @@
               </grid>
             </children>
           </grid>
-          <component id="c6abf" class="javax.swing.JLabel" binding="errorLabel">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.5" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Waarschuwingen:"/>
-            </properties>
-          </component>
-          <component id="89736" class="javax.swing.JLabel" binding="warningLabel">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.5" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Problemen:"/>
-            </properties>
-          </component>
           <hspacer id="f8c18">
             <constraints>
-              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.1" weighty="0.0"/>
             </constraints>
           </hspacer>

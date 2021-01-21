@@ -15,8 +15,6 @@ public class HomePage extends Page implements ActionListener {
     private JLabel usernameLabel;
     private JButton logUitButton;
     private JPanel userIconPanel;
-    private JLabel warningLabel;
-    private JLabel errorLabel;
     private JPanel overview;
     private JPanel results;
     private JButton backToOverview;
@@ -183,6 +181,7 @@ public class HomePage extends Page implements ActionListener {
             end = System.nanoTime();
         } catch (Exception ex) {
             res = null;
+            ex.printStackTrace();
             queryResult.setText("Something went wrong. Try again later, or contact support.");
         }
 

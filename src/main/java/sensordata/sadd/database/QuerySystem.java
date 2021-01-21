@@ -8,13 +8,16 @@ import java.sql.*;
 import java.util.LinkedList;
 
 public class QuerySystem {
-    String properties[] = {"temperatuur", "druk", "tag", "unit"};
-    String transProperty[] = {"temp", "pressure", "tag", "unit"};
+    String properties[] = {"Attribuut", "Waarde", "Tag", "Datum"};
+    String transProperty[] = {"attribute", "value", "tag", "added"};
 
     String locationIdentifiers[] = {"uit", "van"};
 
     String specialIdentifiers[] = {"minimum", "maximum", "gemiddelde"};
-    String transIdentifiers[] = {"min", "max", "avg"};
+    String transIdentifiers[] = {"MIN", "MAX", "AVG"};
+
+    String attrIdentifiers[] = {"KVS", "EHM", "FC", "Sensorwaarde", "URV", "LRV"};
+
 
     public static Connection getConnection() throws Exception {
         try {
@@ -50,6 +53,24 @@ public class QuerySystem {
         return false;
     }
 
+    private boolean isAttribute(String test) {
+        for (String attribute : attrIdentifiers) {
+            if (test.equalsIgnoreCase(attribute)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int isSpecialIdentifier(String test) {
+        for (int i = 0; i < specialIdentifiers.length; i++) {
+            if (test.equalsIgnoreCase(specialIdentifiers[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private String findProperties(String[] query) {
         String result = "*";
         for (int i = 0; i < query.length; i++) {
@@ -58,7 +79,12 @@ public class QuerySystem {
                 if (i > 0) {
                     if (!isLocationIdentifier(query[i - 1])) {
                         if (result.equals("*")) result = "";
-                        result += transProperty[propID] + ", ";
+                        int special = isSpecialIdentifier(query[i - 1]);
+                        if (special == -1) {
+                            result += transProperty[propID] + ", ";
+                        } else {
+                            result += transIdentifiers[special] + "(CAST(" + transProperty[propID] + " AS float)), ";
+                        }
                     }
                 } else {
                     if (result.equals("*")) result = "";
@@ -78,14 +104,68 @@ public class QuerySystem {
 
         for (int i = 0; i < query.length; i++) {
             if (isLocationIdentifier(query[i]) && (i + 1) < query.length) {
-                if (query[i + 1].equalsIgnoreCase("unit") && (i + 2) < query.length) {
-                    result = "unit = " + query[i + 2];
-                } else {
-                    result = "tag = \"" + query[i + 1] + "\"";
-                }
+                result = "tag = \"" + query[i + 1] + "\"";
             }
         }
         return result;
+    }
+
+    private String[] findAttributes(String properties, String location, String[] query) {
+        String tables = "sensordata";
+        String tag = "";
+        boolean attributeQuery = false;
+
+        for (String word : query) {
+            if (isAttribute(word)) {
+                tables = "";
+                properties = "";
+                tag = location;
+                location = "";
+                attributeQuery = true;
+                break;
+            }
+        }
+
+
+
+        if (attributeQuery) {
+            for (int i = 0; i < query.length; i++) {
+                if (isAttribute(query[i])) {
+                    if (properties.equals("*")) properties = "";
+                    int special = i > 0 ? isSpecialIdentifier(query[i - 1]) : -1;
+                    if (special == -1) {
+                        properties += "s" + i + ".value AS \"" + query[i].toUpperCase() + "\", ";
+                    } else {
+                        properties += transIdentifiers[special] + "(CAST(" + "s" + i + ".value AS float)) AS \"" + query[i] + "\", ";
+                    }
+                    if (!tables.equalsIgnoreCase("")) tables += ", ";
+                    tables += "sensordata s" + i;
+
+                    if (!location.equalsIgnoreCase("")) location += " AND ";
+
+                    if (query[i].equalsIgnoreCase("Sensorwaarde")) {
+                        properties += "a" + i + ".value AS \"EENHEID\", ";
+                        tables += ", sensordata a" + i;
+                        location += "s" + i + ".attribute = \"value\" AND s" + i + "." + tag + " AND a" + i + ".attribute = \"unit\" AND a" + i + "." + tag;
+                    } else {
+                        location += "s" + i + ".attribute = \"" + query[i] + "\" AND s" + i + "." + tag;
+                    }
+                }
+            }
+            if (properties.endsWith(", ")) {
+                properties = properties.substring(0, properties.length() - 2);
+            }
+        }
+        return new String[]{properties, location, tables};
+    }
+
+    private String translateName(String name) {
+        for (int i = 0; i < transProperty.length; i++) {
+            if (name.equalsIgnoreCase(transProperty[i])) {
+                return properties[i];
+            }
+        }
+        return name;
     }
 
     public DefaultTableModel query(String query) throws Exception {
@@ -100,10 +180,13 @@ public class QuerySystem {
         String properties = findProperties(querySplit);
         String location = findLocations(querySplit);
 
-        String queryString = "SELECT " + properties + " FROM sensordata" + (!location.equals("") ? " WHERE " + location : "");
+        String[] attributes = findAttributes(properties, location, querySplit);
 
-        statement = con.prepareStatement(queryString);
+
+        String queryString = "SELECT " + attributes[0] + " FROM " + attributes[2] + (!attributes[1].equals("") ? " WHERE " + attributes[1] : "");
+
         System.out.println(queryString);
+        statement = con.prepareStatement(queryString);
 
         ResultSet resultSet = statement.executeQuery();
         ResultSetMetaData rsmd = resultSet.getMetaData();
@@ -116,7 +199,7 @@ public class QuerySystem {
 
         if (columns > 0) {
             for (int i = 1; i <= columns; i++) {
-                model.addColumn(rsmd.getColumnName(i));
+                model.addColumn(attributes[2].equalsIgnoreCase("sensordata") ? translateName(rsmd.getColumnName(i)) : rsmd.getColumnLabel(i));
             }
 
             while (resultSet.next()) {

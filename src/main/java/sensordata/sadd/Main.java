@@ -13,8 +13,6 @@ public class Main {
     static JPanel container = new JPanel(layout);
 
     public static void main(String[] args) {
-
-
         UserInfo userInfo = new UserInfo();
 
         LoginPage loginPage = new LoginPage(userInfo.getLoginInfo(), layout, container);
@@ -25,6 +23,7 @@ public class Main {
         container.add("login", loginPage.loginPanel);
         container.add("register", registerPage.registerPanel);
         container.add("reset", resetPage.resetPagePanel);
+
 
         JFrame frame = new JFrame("Home Page");
 
