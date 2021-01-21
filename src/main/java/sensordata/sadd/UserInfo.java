@@ -34,8 +34,8 @@ public class UserInfo {
         try{
             String driver = "com.mysql.cj.jdbc.Driver";
             String url = "jdbc:mysql://localhost:3306/sadd";// jouw eigen ding invullen
-            String username = "root"; //jouw eigen ding invullen
-            String password = "root";//jouw eigen ding invullen
+            String username = "otacon"; //jouw eigen ding invullen
+            String password = "sherman";//jouw eigen ding invullen
             Class.forName(driver);
 
             Connection conn = DriverManager.getConnection(url,username,password);

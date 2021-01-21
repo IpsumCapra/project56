@@ -22,8 +22,8 @@ public class QuerySystem {
     public static Connection getConnection() throws Exception {
         try {
             String url = "jdbc:mysql://localhost:3306/sadd";
-            String username = "root";
-            String password = "root";
+            String username = "otacon";
+            String password = "sherman";
 
             Connection conn = DriverManager.getConnection(url, username, password);
             System.out.println("Connected");
@@ -136,7 +136,7 @@ public class QuerySystem {
                     if (special == -1) {
                         properties += "s" + i + ".value AS \"" + query[i].toUpperCase() + "\", ";
                     } else {
-                        properties += transIdentifiers[special] + "(CAST(" + "s" + i + ".value AS float)) AS \"" + query[i] + "\", ";
+                        properties += transIdentifiers[special] + "(CAST(" + "s" + i + ".value AS float)) AS \"" + query[i].toUpperCase() + "\", ";
                     }
                     if (!tables.equalsIgnoreCase("")) tables += ", ";
                     tables += "sensordata s" + i;

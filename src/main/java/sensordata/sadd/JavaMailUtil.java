@@ -15,6 +15,7 @@ public class JavaMailUtil {
 
     public static void sendMail(String recepient, String code) throws Exception {
         verify_code = code;
+        System.out.println(code);
         System.out.println("Preparing to send email");
         Properties properties = new Properties();
 
@@ -72,7 +73,5 @@ public class JavaMailUtil {
             number[i] = Integer.toString(random.nextInt(10));
         }
         return number[0] + number[1] + number[2] + number[3];
-
-
     }
 }
