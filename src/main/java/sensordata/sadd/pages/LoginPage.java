@@ -3,6 +3,8 @@ package main.java.sensordata.sadd.pages;
 import main.java.sensordata.sadd.Main;
 import main.java.sensordata.sadd.database.UserInfo;
 
+import main.java.sensordata.sadd.pages.Page;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -47,6 +49,8 @@ public class LoginPage extends Page implements ActionListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 getCards().show(getParent(), "reset");
+                messageLabel.setText("");
+
             }
         });
     }
@@ -62,37 +66,34 @@ public class LoginPage extends Page implements ActionListener {
                 UserInfo email = new UserInfo();
 
                 try {
-                    //If the user has inserted username, then get the email from this username
-                    if(email.get("email", username_input)==null)
-                    {
-                        username_input = email.getEmail("username", username_input);
-                        System.out.print(username_input);
-                    }
+
                     email.get("email", username_input);
                     email.salting("email", username_input);
+                    if(email.get_count("email",username_input).equals("1")) {
+                        byte[] salt = Base64.getDecoder().decode(email.getSalt());
+                        if (email.getSecurePassword(password, salt).equals(email.getpassword())) {
 
-
-                    byte[] salt = Base64.getDecoder().decode(email.getSalt());
-                    if (email.getSecurePassword(password, salt).equals(email.getpassword())) {
-
-                        Main main = new Main();
-                        String username= email.getUsername("email", username_input);
-                        System.out.print(username);
-                        main.updateHomePage(username_input,username);
-                        getCards().show(getParent(), "home");
-                        usernameField.setText("");
-                        passwordField.setText("");
-                        messageLabel.setText("");
-                    } else {
-                        wrongPasswordOrUsername();
-
+                            Main main = new Main();
+                            String username = email.getUsername(username_input);
+                            main.updateHomePage(username_input, username);
+                            getCards().show(getParent(), "home");
+                            usernameField.setText("");
+                            passwordField.setText("");
+                            messageLabel.setText("");
+                        } else {
+                            wrongPasswordOrUsername();
+                        }
                     }
-                } catch (Exception E) {
+                    else {
+                            wrongPasswordOrUsername();
+                        }
                 }
+                catch (Exception E) { }
                 break;
 
             case REGISTER:
                 getCards().show(getParent(), "register");
+                messageLabel.setText("");
                 break;
         }
     }

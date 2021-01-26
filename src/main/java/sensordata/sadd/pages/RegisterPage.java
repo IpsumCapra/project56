@@ -1,6 +1,8 @@
 package main.java.sensordata.sadd.pages;
 
 import main.java.sensordata.sadd.database.UserInfo;
+import main.java.sensordata.sadd.pages.Page;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,19 +68,13 @@ public class RegisterPage extends Page implements ActionListener {
                 } else  {
                     UserInfo new_account = new UserInfo();
                     try {
-                        String username_check = new_account.get_count("username", firstName);
                         String email_check = new_account.get_count("email", email);
 
-                        if (username_check.equals("1") & email_check.equals("1")) {
+                       if (email_check.equals("1")) {
                             messageLabel.setForeground(Color.red);
-                            messageLabel.setText("Gebruikersnaam en Email zijn beide  al in gebruik");
-                        } else if (username_check.equals("1")) {
-                            messageLabel.setForeground(Color.red);
-                            messageLabel.setText("De  gebruikersnaam is al in gebruik");
-                        } else if (email_check.equals("1")) {
-                            messageLabel.setForeground(Color.red);
-                            messageLabel.setText("De Email is al in gebruik");
-                        } else {
+                            messageLabel.setText("De email is al in gebruik");
+                        }
+                       else {
                             final String command = "INSERT INTO sadd.users(username,email,insertion,lastname) VALUES ('" + firstName + "', '" + email + "','" + insertion + "','" + lastName + "')";
                             new_account.post(command);
                             getCards().show(getParent(), "reset");
