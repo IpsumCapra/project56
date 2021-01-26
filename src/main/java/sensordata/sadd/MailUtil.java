@@ -8,13 +8,14 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class JavaMailUtil {
+public class MailUtil {
 
 
     private static String verify_code;
 
     public static void sendMail(String recepient, String code) throws Exception {
         verify_code = code;
+        System.out.println(code);
         System.out.println("Preparing to send email");
         Properties properties = new Properties();
 
@@ -59,7 +60,7 @@ public class JavaMailUtil {
             message.setContent(htmlCode, "text/html");
             return message;
         } catch (Exception ex) {
-            Logger.getLogger(JavaMailUtil.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MailUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -72,7 +73,5 @@ public class JavaMailUtil {
             number[i] = Integer.toString(random.nextInt(10));
         }
         return number[0] + number[1] + number[2] + number[3];
-
-
     }
 }

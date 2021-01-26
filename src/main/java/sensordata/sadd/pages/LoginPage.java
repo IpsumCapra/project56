@@ -2,6 +2,7 @@ package main.java.sensordata.sadd.pages;
 
 import main.java.sensordata.sadd.Main;
 import main.java.sensordata.sadd.database.UserInfo;
+
 import main.java.sensordata.sadd.pages.Page;
 
 import javax.swing.*;
@@ -49,6 +50,7 @@ public class LoginPage extends Page implements ActionListener {
             public void mouseClicked(MouseEvent e) {
                 getCards().show(getParent(), "reset");
                 messageLabel.setText("");
+
             }
         });
     }

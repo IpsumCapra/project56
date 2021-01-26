@@ -136,7 +136,7 @@ public class QuerySystem {
                     if (special == -1) {
                         properties += "s" + i + ".value AS \"" + query[i].toUpperCase() + "\", ";
                     } else {
-                        properties += transIdentifiers[special] + "(CAST(" + "s" + i + ".value AS float)) AS \"" + query[i] + "\", ";
+                        properties += transIdentifiers[special] + "(CAST(" + "s" + i + ".value AS float)) AS \"" + query[i].toUpperCase() + "\", ";
                     }
                     if (!tables.equalsIgnoreCase("")) tables += ", ";
                     tables += "sensordata s" + i;

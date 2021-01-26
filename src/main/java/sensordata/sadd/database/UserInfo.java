@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserInfo {
+    private static String email;
+    private static String password;
+    private static String username;
+    private static String salt;
+    private static String count_nr;
 
     private static String password;
     private static String username;
@@ -18,6 +23,7 @@ public class UserInfo {
     private static String count_nr;
 
     HashMap<String, String> loginInfo = new HashMap<String, String>();
+
 
     public HashMap getLoginInfo() {
         return loginInfo;
@@ -30,9 +36,12 @@ public class UserInfo {
         try{
             String driver = "com.mysql.cj.jdbc.Driver";
             String url = "jdbc:mysql://localhost:3306/sadd";// jouw eigen ding invullen
-            String username = "otacon"; //jouw eigen ding invullen
-            String password = "sherman";//jouw eigen ding invullen
+
+            String username = "root"; //jouw eigen ding invullen
+            String password = "root";//jouw eigen ding invullen
+
             Class.forName(driver);
+
 
             Connection conn = DriverManager.getConnection(url,username,password);
             System.out.println("Connected");
@@ -62,7 +71,6 @@ public class UserInfo {
         return password;
     }
 
-
     public static String  getUsername(String email) throws Exception{
         ArrayList<String> array = new ArrayList<String>();
         try{
@@ -88,7 +96,6 @@ public class UserInfo {
         else{
             return(array.get(0)+" "+array.get(1)+" "+array.get(2));
         }
-
     }
 
     //return the password

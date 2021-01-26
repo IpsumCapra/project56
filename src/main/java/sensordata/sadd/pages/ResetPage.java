@@ -4,6 +4,7 @@ import main.java.sensordata.sadd.JavaMailUtil;
 import main.java.sensordata.sadd.Main;
 import main.java.sensordata.sadd.pages.Page;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -51,6 +52,7 @@ public class ResetPage extends Page implements ActionListener {
                 number = random_generator.random_numbers();
                 try {
                     JavaMailUtil.sendMail(email, number);
+
                 } catch (Exception E) {
                 }
                 break;
