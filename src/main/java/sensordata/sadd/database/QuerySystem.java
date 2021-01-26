@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.LinkedList;
 
 public class QuerySystem {
+    // Keywords for the language processor.
     String properties[] = {"Attribuut", "Waarde", "Tag", "Datum"};
     String transProperty[] = {"attribute", "value", "tag", "added"};
 
@@ -18,12 +19,12 @@ public class QuerySystem {
 
     String attrIdentifiers[] = {"KVS", "EHM", "FC", "Sensorwaarde", "URV", "LRV"};
 
-
+    // Build a connection with the SADD db.
     public static Connection getConnection() throws Exception {
         try {
             String url = "jdbc:mysql://localhost:3306/sadd";
-            String username = "otacon";
-            String password = "sherman";
+            String username = "root";
+            String password = "root";
 
             Connection conn = DriverManager.getConnection(url, username, password);
             System.out.println("Connected");
@@ -35,6 +36,7 @@ public class QuerySystem {
         return null;
     }
 
+    // Check whether the word is a property, if yes, return it's translated index.
     private int isProperty(String test) {
         for (int i = 0; i < properties.length; i++) {
             if (test.equalsIgnoreCase(properties[i])) {
@@ -44,6 +46,7 @@ public class QuerySystem {
         return -1;
     }
 
+    // Check if a word is a location identifier.
     private boolean isLocationIdentifier(String test) {
         for (String identifer : locationIdentifiers) {
             if (test.equalsIgnoreCase(identifer)) {
@@ -53,6 +56,7 @@ public class QuerySystem {
         return false;
     }
 
+    // Check if a word is an attribute.
     private boolean isAttribute(String test) {
         for (String attribute : attrIdentifiers) {
             if (test.equalsIgnoreCase(attribute)) {
@@ -62,6 +66,7 @@ public class QuerySystem {
         return false;
     }
 
+    // Check if a word is a special identifier.
     private int isSpecialIdentifier(String test) {
         for (int i = 0; i < specialIdentifiers.length; i++) {
             if (test.equalsIgnoreCase(specialIdentifiers[i])) {
@@ -71,6 +76,7 @@ public class QuerySystem {
         return -1;
     }
 
+    // Find all properties in the query, and return the property part of the converted SQL query.
     private String findProperties(String[] query) {
         String result = "*";
         for (int i = 0; i < query.length; i++) {
@@ -99,6 +105,7 @@ public class QuerySystem {
         }
     }
 
+    // Find the location from which to get info (if any)
     private String findLocations(String[] query) {
         String result = "";
 
@@ -110,6 +117,7 @@ public class QuerySystem {
         return result;
     }
 
+    // Find all attributes, alter the query accordingly.
     private String[] findAttributes(String properties, String location, String[] query) {
         String tables = "sensordata";
         String tag = "";
@@ -159,6 +167,7 @@ public class QuerySystem {
         return new String[]{properties, location, tables};
     }
 
+    // If there is a more user friendly definition for a column name, return it
     private String translateName(String name) {
         for (int i = 0; i < transProperty.length; i++) {
             if (name.equalsIgnoreCase(transProperty[i])) {
@@ -168,26 +177,32 @@ public class QuerySystem {
         return name;
     }
 
+    // Build a table from a string query using the language processor.
     public DefaultTableModel query(String query) throws Exception {
+        // Connect to the db
         Connection con = getConnection();
         PreparedStatement statement = null;
 
         System.out.println("Processing: " + query);
 
-        //split query into loose parts.
+        // Split query into loose parts.
         String querySplit[] = query.split(" ");
 
+        // Find relevant keywords, process them.
         String properties = findProperties(querySplit);
         String location = findLocations(querySplit);
 
+        // Process query. if an attribute is found, the query is turned into an attribute query, other questions will be lost.
         String[] attributes = findAttributes(properties, location, querySplit);
 
-
+        // Build the SQL string.
         String queryString = "SELECT " + attributes[0] + " FROM " + attributes[2] + (!attributes[1].equals("") ? " WHERE " + attributes[1] : "");
 
+        // Prepare and execute the SQL statement.
         System.out.println(queryString);
         statement = con.prepareStatement(queryString);
 
+        // Process the data into a DefaultTableModel for further processing in the UI.
         ResultSet resultSet = statement.executeQuery();
         ResultSetMetaData rsmd = resultSet.getMetaData();
 
@@ -197,8 +212,10 @@ public class QuerySystem {
 
         DefaultTableModel model = new DefaultTableModel();
 
+        // Place all values into the model accordingly.
         if (columns > 0) {
             for (int i = 1; i <= columns; i++) {
+                // Translate column names.
                 model.addColumn(attributes[2].equalsIgnoreCase("sensordata") ? translateName(rsmd.getColumnName(i)) : rsmd.getColumnLabel(i));
             }
 
@@ -213,6 +230,7 @@ public class QuerySystem {
         return model;
     }
 
+    // Fancy getters and setters, which use the database to function.
     public Overview[] getOverviews(String email) throws Exception {
         PreparedStatement statement = getConnection().prepareStatement("SELECT overview_id, name, query, refresh_rate  FROM overviews WHERE user_mail = \"" + email + "\"");
         ResultSet resultSet = statement.executeQuery();
@@ -237,6 +255,7 @@ public class QuerySystem {
         return shortcuts.toArray(new Shortcut[0]);
     }
 
+    // Functions to remove and add the UI shortcuts which are stored inside the database.
     public boolean addOverview(String email, String query, String name, int refreshRate) {
         try {
             PreparedStatement update = getConnection().prepareStatement("INSERT INTO overviews (user_mail, query, name, refresh_rate) VALUES (\"" + email + "\", \"" + query + "\", \"" + name + "\", " + refreshRate + ")");
