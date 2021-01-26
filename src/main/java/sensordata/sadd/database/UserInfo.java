@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserInfo {
-    private static String email;
+
     private static String password;
     private static String username;
     private static String salt;
@@ -30,8 +30,8 @@ public class UserInfo {
         try{
             String driver = "com.mysql.cj.jdbc.Driver";
             String url = "jdbc:mysql://localhost:3306/sadd";// jouw eigen ding invullen
-            String username = "root"; //jouw eigen ding invullen
-            String password = "root";//jouw eigen ding invullen
+            String username = "otacon"; //jouw eigen ding invullen
+            String password = "sherman";//jouw eigen ding invullen
             Class.forName(driver);
 
             Connection conn = DriverManager.getConnection(url,username,password);
@@ -62,44 +62,33 @@ public class UserInfo {
         return password;
     }
 
-    public static String getEmail(String input , String value) throws Exception{
+
+    public static String  getUsername(String email) throws Exception{
+        ArrayList<String> array = new ArrayList<String>();
         try{
+            System.out.print(email);
             Connection con = getConnection();
-            PreparedStatement statement = con.prepareStatement("SELECT email FROM sadd.users WHERE "+input+" = \""+value+"\"");
+            PreparedStatement statement = con.prepareStatement("SELECT username,insertion,lastname FROM sadd.users WHERE email = \""+email+"\"");
 
             ResultSet result = statement.executeQuery();
 
-            ArrayList<String> array = new ArrayList<String>();
+
             while(result.next()){
-                email= result.getString("email");
-                System.out.print(" ");
-                array.add(result.getString("email"));
-            }
-        }
-        catch(Exception e){ }
-
-        return email;
-    }
-
-    public static String getUsername(String input , String value) throws Exception{
-        try{
-            Connection con = getConnection();
-            PreparedStatement statement = con.prepareStatement("SELECT username FROM sadd.users WHERE "+input+" = \""+value+"\"");
-
-            ResultSet result = statement.executeQuery();
-
-            ArrayList<String> array = new ArrayList<String>();
-            while(result.next()){
-                username= result.getString("username");
-                System.out.print(" ");
-
-
                 array.add(result.getString("username"));
+                array.add(result.getString("insertion"));
+                array.add(result.getString("lastname"));
             }
         }
-        catch(Exception e){ }
+        catch(Exception e){}
 
-        return username;
+        if (array.get(1).equals(""))
+        {
+            return(array.get(0)+" "+array.get(2));
+        }
+        else{
+            return(array.get(0)+" "+array.get(1)+" "+array.get(2));
+        }
+
     }
 
     //return the password
