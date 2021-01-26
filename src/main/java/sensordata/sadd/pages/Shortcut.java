@@ -4,9 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Shortcut extends JButton {
+    // Variables.
     private String query;
     private int id;
 
+    // Shortcut constructor.
     public Shortcut(String name, int id, String query) {
         super(name);
         this.query = query;
@@ -14,6 +16,7 @@ public class Shortcut extends JButton {
         setActionCommand("shortcut");
     }
 
+    // Getters.
     public String getQuery() {
         return query;
     }

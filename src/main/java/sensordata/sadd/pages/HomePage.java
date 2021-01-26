@@ -38,6 +38,7 @@ public class HomePage extends Page implements ActionListener {
     private JTextField overviewNameField;
     //</editor-fold>
 
+    // Action commands.
     private static final String SEARCH = "search";
     private static final String TO_OVERVIEW = "to overview";
     private static final String SHORTCUT = "shortcut";
@@ -49,6 +50,7 @@ public class HomePage extends Page implements ActionListener {
     private static final String TOGGLE_SHORTCUT_WIZARD = "toggle shortcut wizard";
     private static final String LOGOUT = "logout";
 
+    // UI Variables.
     private String email;
     private String username;
 
@@ -58,11 +60,14 @@ public class HomePage extends Page implements ActionListener {
     private final JPopupMenu overviewMenu = new JPopupMenu();
     private final JPopupMenu shortcutMenu = new JPopupMenu();
 
+    // Query system initialization.
     private final QuerySystem querySystem = new QuerySystem();
 
+    // Create the personalized homepage.
     public HomePage(String email,String username,CardLayout cards, Container parent) {
         super(cards, parent);
 
+        // Add all the button listeners and menus etc.
         JMenuItem overviewDeleteItem = new JMenuItem("Verwijder overzicht");
         overviewDeleteItem.setMnemonic(KeyEvent.VK_V);
         overviewDeleteItem.addActionListener(this);
@@ -105,22 +110,24 @@ public class HomePage extends Page implements ActionListener {
         logUitButton.setActionCommand(LOGOUT);
         logUitButton.addActionListener(this);
 
-        //TODO Replace with login.
+        // Ready user credentials.
         setEmailUsername(email,username);
         usernameLabel.setText(username);
 
-
+        // Use user credentials to generate saved shortcuts and overviews.
         buildShortcuts();
         buildOverview();
     }
 
-
+    // Build shortcut list.
     public void buildShortcuts() {
+        // Setup layout.
         JPanel shortcuts = new JPanel(new GridLayout(0, 2));
 
         ((GridLayout) shortcuts.getLayout()).setRows(10);
         ((GridLayout) shortcuts.getLayout()).setVgap(5);
 
+        // Retrieve user shortcuts from the database.
         Shortcut[] shortcutButtons = null;
         try {
             shortcutButtons = querySystem.getShortcuts(email);
@@ -128,6 +135,7 @@ public class HomePage extends Page implements ActionListener {
             e.printStackTrace();
         }
 
+        // Create actual UI buttons.
         if (shortcutButtons != null) {
             int length = shortcutButtons.length;
             ((GridLayout) shortcuts.getLayout()).setRows(Math.round(length/2) + 1);
@@ -138,16 +146,20 @@ public class HomePage extends Page implements ActionListener {
                 shortcutButtons[i].setComponentPopupMenu(shortcutMenu);
             }
 
+            // Set display properties.
             shortcutPanel.getViewport().add(shortcuts);
             shortcuts.setPreferredSize(new Dimension(shortcutPanel.getViewport().getSize().width, length * 20));
         }
     }
 
+    // Build overview list.
     public void buildOverview() {
+        // Setup layout.
         JPanel overviews = new JPanel(new GridLayout(0, 1));
 
         ((GridLayout) overviews.getLayout()).setVgap(5);
 
+        // Retrieve the overviews from the database.
         Overview[] overviewEntries = null;
         try {
             overviewEntries = querySystem.getOverviews(email);
@@ -155,6 +167,7 @@ public class HomePage extends Page implements ActionListener {
             e.printStackTrace();
         }
 
+        // Create UI overview units.
         if (overviewEntries != null) {
             int length = overviewEntries.length;
             ((GridLayout) overviews.getLayout()).setRows(overviewEntries.length);
@@ -165,16 +178,20 @@ public class HomePage extends Page implements ActionListener {
                 overviewEntries[i].setComponentPopupMenu(overviewMenu);
             }
 
+            // Set display properties.
             overviewPanel.getViewport().add(overviews);
             Dimension dim = overviews.getSize();
             overviews.setPreferredSize(new Dimension(overviewPanel.getViewport().getSize().width, length * 100));
         }
     }
 
+    // Generate result table based on search query.
     public void generateTable(String query) {
         DefaultTableModel res;
         long start = 0;
         long end = 0;
+
+        // Retrieve result from query.
         try {
             start = System.nanoTime();
             res = querySystem.query(query);
@@ -185,33 +202,37 @@ public class HomePage extends Page implements ActionListener {
             queryResult.setText("Something went wrong. Try again later, or contact support.");
         }
 
+        // Build table.
         if (res != null) {
             queryResult.setText("Query OK (Got " + res.getColumnCount() + " COLS, " + res.getRowCount() + " ROWS in " + (end - start) / 1000000 + "ms.)");
             resultTable.setModel(res);
         }
 
+        // Switch to result.
         ((CardLayout) contentPanel.getLayout()).show(contentPanel, "results");
     }
 
+    // Dual setter.
     public void setEmailUsername(String email,String username)
     {
         this.email = email;
         this.username= username;
     }
 
+    // Set all button actions corresponding to their action names.
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
-            case SEARCH:
+            case SEARCH: // Create search table.
                 generateTable(searchField.getText());
                 break;
-            case TO_OVERVIEW:
+            case TO_OVERVIEW: // Go to the overview.
                 ((CardLayout) contentPanel.getLayout()).show(contentPanel, "overview");
                 break;
-            case SHORTCUT:
+            case SHORTCUT: // Use shortcut.
                 generateTable(((Shortcut) e.getSource()).getQuery());
                 break;
-            case DELETE_OVERVIEW:
+            case DELETE_OVERVIEW: // Remove overview.
                 Overview overview = (Overview)((JPopupMenu)((JMenuItem)e.getSource()).getParent()).getInvoker();
                 if (querySystem.deleteOverview(email, overview.getID())) {
                     System.out.println("Success!");
@@ -221,7 +242,7 @@ public class HomePage extends Page implements ActionListener {
                     //TODO Add deletion failure code
                 }
                 break;
-            case DELETE_SHORTCUT:
+            case DELETE_SHORTCUT: // Delete shortcut.
                 Shortcut shortcut = (Shortcut)((JPopupMenu)((JMenuItem)e.getSource()).getParent()).getInvoker();
                 if (querySystem.deleteShortcut(email, shortcut.getID())) {
                     System.out.println("Success!");
@@ -231,7 +252,7 @@ public class HomePage extends Page implements ActionListener {
                     //TODO Add deletion failure code
                 }
                 break;
-            case ADD_OVERVIEW:
+            case ADD_OVERVIEW: // Add overview.
                 String overName = overviewNameField.getText();
                 String overQuery = overviewWizardQueryField.getText();
                 if (!overName.equals("") && !overQuery.equals("")) {
@@ -246,7 +267,7 @@ public class HomePage extends Page implements ActionListener {
                     //TODO Add proper handling of missing values.
                 }
                 break;
-            case ADD_SHORTCUT:
+            case ADD_SHORTCUT: // Add shortcut.
                 String shortcutName = shortcutNameField.getText();
                 String shortcutQueryString = shortcutQuery.getText();
                 if (!shortcutName.equals("") && !shortcutQueryString.equals("")) {
@@ -261,7 +282,7 @@ public class HomePage extends Page implements ActionListener {
                     //TODO Add proper handling of missing values.
                 }
                 break;
-            case TOGGLE_OVERVIEW_WIZARD:
+            case TOGGLE_OVERVIEW_WIZARD: // Show or hide the overview wizard.
                 ((CardLayout) overviewContainer.getLayout()).next(overviewContainer);
                 inOverviewWizard = !inOverviewWizard;
                 if (inOverviewWizard) {
@@ -270,7 +291,7 @@ public class HomePage extends Page implements ActionListener {
                     addOverviewButton.setText("Voeg nieuw overzicht toe");
                 }
                 break;
-            case TOGGLE_SHORTCUT_WIZARD:
+            case TOGGLE_SHORTCUT_WIZARD: // Show or hide the shortcut wizard.
                 ((CardLayout) shortcutsContainer.getLayout()).next(shortcutsContainer);
                 inShortcutWizard = !inShortcutWizard;
                 if (inShortcutWizard) {
@@ -279,7 +300,7 @@ public class HomePage extends Page implements ActionListener {
                     addShortcutButton.setText("Voeg nieuwe snelkoppeling toe");
                 }
                 break;
-            case LOGOUT:
+            case LOGOUT: // Log out off the main SADD system, and go back to the login screen.
                 getCards().show(getParent(), "login");
         }
     }

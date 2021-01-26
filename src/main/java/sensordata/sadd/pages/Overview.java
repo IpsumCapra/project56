@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class Overview extends JPanel implements Runnable {
+    // Variables.
     private String query;
     private int id;
     private int refreshRate;
@@ -16,10 +17,12 @@ public class Overview extends JPanel implements Runnable {
     private JScrollPane scrollPane;
     private JTable table;
 
+    // Getter.
     public int getID() {
         return id;
     }
 
+    // Overview constructor.
     public Overview(int id, String name, String query, int refreshRate, QuerySystem querySystem) {
         this.setLayout(new BoxLayout(this, 1));
 
@@ -36,6 +39,7 @@ public class Overview extends JPanel implements Runnable {
         add(scrollPane);
     }
 
+    // Thread run method. Runs the registered query every at the set refresh rate.
     @Override
     public void run() {
         while (true) {
