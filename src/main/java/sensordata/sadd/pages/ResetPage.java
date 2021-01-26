@@ -1,6 +1,6 @@
 package main.java.sensordata.sadd.pages;
 
-import main.java.sensordata.sadd.JavaMailUtil;
+import main.java.sensordata.sadd.MailUtil;
 import main.java.sensordata.sadd.Main;
 import main.java.sensordata.sadd.pages.Page;
 
@@ -48,10 +48,10 @@ public class ResetPage extends Page implements ActionListener {
                 break;
             case REQUEST:
                 email = textField1.getText();
-                JavaMailUtil random_generator = new JavaMailUtil();
+                MailUtil random_generator = new MailUtil();
                 number = random_generator.random_numbers();
                 try {
-                    JavaMailUtil.sendMail(email, number);
+                    MailUtil.sendMail(email, number);
 
                 } catch (Exception E) {
                 }

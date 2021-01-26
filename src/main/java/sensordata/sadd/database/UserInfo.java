@@ -17,11 +17,6 @@ public class UserInfo {
     private static String salt;
     private static String count_nr;
 
-    private static String password;
-    private static String username;
-    private static String salt;
-    private static String count_nr;
-
     HashMap<String, String> loginInfo = new HashMap<String, String>();
 
 
@@ -37,8 +32,8 @@ public class UserInfo {
             String driver = "com.mysql.cj.jdbc.Driver";
             String url = "jdbc:mysql://localhost:3306/sadd";// jouw eigen ding invullen
 
-            String username = "root"; //jouw eigen ding invullen
-            String password = "root";//jouw eigen ding invullen
+            String username = "otacon"; //jouw eigen ding invullen
+            String password = "sherman";//jouw eigen ding invullen
 
             Class.forName(driver);
 
