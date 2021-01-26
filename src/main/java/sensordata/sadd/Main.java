@@ -1,7 +1,8 @@
 package main.java.sensordata.sadd;
 
 
-import main.java.sensordata.sadd.pages.HomePage;
+import main.java.sensordata.sadd.database.UserInfo;
+import main.java.sensordata.sadd.pages.*;
 
 import javax.swing.*;
 import java.awt.*;

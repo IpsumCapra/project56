@@ -1,5 +1,7 @@
-package main.java.sensordata.sadd;
+package main.java.sensordata.sadd.pages;
 
+import main.java.sensordata.sadd.JavaMailUtil;
+import main.java.sensordata.sadd.Main;
 import main.java.sensordata.sadd.pages.Page;
 
 import javax.swing.*;
