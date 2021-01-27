@@ -49,5 +49,8 @@ async def main():
             # Sleep 1 minute before next run
             time.sleep(60)
 
+# Clear sensordata table.
 cursor.execute("TRUNCATE TABLE sensordata")
+
+# Start logger.
 asyncio.run(main())
