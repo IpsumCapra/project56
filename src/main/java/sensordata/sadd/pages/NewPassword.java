@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.Base64;
 
 public class NewPassword extends Page implements ActionListener {
+    //<editor-fold desc="Swing elements">
     public JPanel newPasswordPanel;
     private JLabel label1;
     private JPasswordField repeat_password;
@@ -18,9 +19,12 @@ public class NewPassword extends Page implements ActionListener {
     private JButton wachtwoordVeranderenButton;
     private JLabel label2;
     private String email;
+    //</editor-fold>
 
+    // Action commands
     private static final String CHANGEPASSWORD = "changePassword";
 
+    // Create NewPassword Page
     public NewPassword(String email, CardLayout cards, Container parent) {
         super(cards, parent);
         this.email = email;
@@ -35,10 +39,12 @@ public class NewPassword extends Page implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()){
             case CHANGEPASSWORD:
+                // change password variables
                 UserInfo post_pass = new UserInfo();
+                String input_password = String.valueOf(new_password.getPassword());
 
-                String input_password = new_password.getText();
-                if (input_password.equals(repeat_password.getText())) {
+                // checks if password is valid
+                if (input_password.equals(String.valueOf(repeat_password.getPassword()))) {
                     if (input_password.length() >= 8) {
                         label2.setForeground(Color.RED);
                         label2.setText("Approved");

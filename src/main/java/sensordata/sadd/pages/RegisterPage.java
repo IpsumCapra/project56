@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RegisterPage extends Page implements ActionListener {
+    //<editor-fold desc="Swing elements">
     private JTextField firstNameField;
     private JTextField insertionField;
     private JTextField lastNameField;
@@ -24,10 +25,13 @@ public class RegisterPage extends Page implements ActionListener {
     private JLabel goBackLabel;
     private JLabel messageLabel;
     private JButton backToLogin;
+    //</editor-fold>
 
+    // Action commands
     private static final String LOGIN = "login";
     private static final String CREATE = "createAccount";
 
+    // Create RegisterPage
     public RegisterPage(CardLayout cards, Container parent) {
         super(cards, parent);
 
@@ -43,6 +47,7 @@ public class RegisterPage extends Page implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()){
             case LOGIN:
+                // Resets the field and switches to the loginPage
                 messageLabel.setText("");
                 firstNameField.setText("");
                 insertionField.setText("");
@@ -52,6 +57,7 @@ public class RegisterPage extends Page implements ActionListener {
                 break;
 
             case CREATE:
+                // create variables
                 String firstName = firstNameField.getText();
                 String insertion = insertionField.getText();
                 String lastName = lastNameField.getText();
@@ -61,6 +67,7 @@ public class RegisterPage extends Page implements ActionListener {
                 checkForEmptyFields(lastName, lastNameField);
                 checkForEmptyFields(email, emailField);
 
+                // checks if all the fields are filled in
                 if (firstName.equals("") || lastName.equals("") || email.equals("") ) {
                     messageLabel.setForeground(Color.red);
                     messageLabel.setText("Niet alle verplichte velden zijn ingevuld");
@@ -69,12 +76,13 @@ public class RegisterPage extends Page implements ActionListener {
                     UserInfo new_account = new UserInfo();
                     try {
                         String email_check = new_account.get_count("email", email);
-
+                        // checks if the email is usable
                        if (email_check.equals("1")) {
                             messageLabel.setForeground(Color.red);
                             messageLabel.setText("De email is al in gebruik");
                         }
                        else {
+                           // putt the user information into the databases en switch to ResetPage
                             final String command = "INSERT INTO sadd.users(username,email,insertion,lastname) VALUES ('" + firstName + "', '" + email + "','" + insertion + "','" + lastName + "')";
                             new_account.post(command);
                             getCards().show(getParent(), "reset");
@@ -91,6 +99,7 @@ public class RegisterPage extends Page implements ActionListener {
         }
     }
 
+    // when fields are empty the border color will be set red
     public void checkForEmptyFields(String string, JTextField field) {
         if (string.equals("")) {
             field.setBorder(BorderFactory.createLineBorder(Color.red));

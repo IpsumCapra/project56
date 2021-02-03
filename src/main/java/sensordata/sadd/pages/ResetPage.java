@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ResetPage extends Page implements ActionListener {
+    //<editor-fold desc="Swing elements">
     public JPanel resetPagePanel;
     private JTextField textField1;
     private JButton opvragenButton;
@@ -18,14 +19,18 @@ public class ResetPage extends Page implements ActionListener {
     private JTextField textField2;
     private JButton verifieerButton;
     private JLabel warning;
+    //</editor-fold>
 
+    // reset variables
     private String number;
     private String email;
 
+    // Action commands
     private static final String LOGIN = "login";
     private static final String VERIFIEER = "verifieer";
     private static final String REQUEST = "request";
 
+    // Create ResetPage
     public ResetPage(CardLayout cards, Container parent) {
         super(cards, parent);
 
@@ -43,10 +48,12 @@ public class ResetPage extends Page implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()){
+            // Switch to LoginPage
             case LOGIN:
                 getCards().show(getParent(), "login");
                 break;
             case REQUEST:
+                // sends email with random generated code
                 email = textField1.getText();
                 MailUtil random_generator = new MailUtil();
                 number = random_generator.random_numbers();
@@ -57,9 +64,11 @@ public class ResetPage extends Page implements ActionListener {
                 }
                 break;
             case VERIFIEER:
+                // checks if code is valid
                 if(number.equals(textField2.getText())) {
-                    Main main =new Main();
+                    Main main = new Main();
                     main.updateNewPassword(email);
+                    // switch to NewPasswordPage and reset fields
                     getCards().show(getParent(), "newPassword");
                     number="";
                     textField1.setText("");
@@ -74,6 +83,7 @@ public class ResetPage extends Page implements ActionListener {
         }
     }
 
+    // getter
     public String getTextField2() {
         String mail = textField2.getText();
         return mail;
