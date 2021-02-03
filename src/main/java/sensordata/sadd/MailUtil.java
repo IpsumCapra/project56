@@ -10,12 +10,11 @@ import java.util.logging.Logger;
 
 public class MailUtil {
 
-
+    //field
     private static String verify_code;
 
     public static void sendMail(String recepient, String code) throws Exception {
         verify_code = code;
-        System.out.println(code);
         System.out.println("Preparing to send email");
         Properties properties = new Properties();
 
@@ -50,12 +49,13 @@ public class MailUtil {
         System.out.println("Message sent successfully");
     }
 
+    //context of the email
     private static Message prepareMessage(Session session, String myAccountEmail, String recepient) {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(myAccountEmail));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
-            message.setSubject("Verify code"); //title van de mail
+            message.setSubject("Verify code"); //title of mail
             String htmlCode = "<h1> " + verify_code+ " </h1> <br/> <h2><b> </b></h2>"; // contex
             message.setContent(htmlCode, "text/html");
             return message;
@@ -65,6 +65,7 @@ public class MailUtil {
         return null;
     }
 
+    //generate a 4 random numbers (verify code)
     public String random_numbers() {
         Random random = new Random();
         String[] number = new String[4];
