@@ -302,6 +302,8 @@ public class HomePage extends Page implements ActionListener {
                 break;
             case LOGOUT: // Log out off the main SADD system, and go back to the login screen.
                 getCards().show(getParent(), "login");
+                usernameLabel.setText("");
+                break;
         }
     }
 }
